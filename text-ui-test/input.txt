@@ -17,11 +17,18 @@ event project meeting /from Mon 2pm /to 4pm
 list
 mark 1
 mark 69
+mark abc
 mark
 list
 unmark 1
 unmark 69
+unmark abc
 unmark
+list
+delete
+delete 69
+delete abc
+delete 1
 list
 invalidcommand
 

@@ -106,7 +106,9 @@ public class Pookie {
                 try {
                     String[] parts = input.split(" ", 2);
                     if (parts.length < 2) {
-                        displayInvalidTaskNumberError();
+                        System.out.println("____________________________________________________________");
+                        System.out.println(" usage: mark <task number>");
+                        System.out.println("____________________________________________________________\n");
                         continue;
                     }
 
@@ -127,7 +129,9 @@ public class Pookie {
                 try {
                     String[] parts = input.split(" ", 2);
                     if (parts.length < 2) {
-                        displayInvalidTaskNumberError();
+                        System.out.println("____________________________________________________________");
+                        System.out.println(" usage: unmark <task number>");
+                        System.out.println("____________________________________________________________\n");
                         continue;
                     }
 
@@ -137,6 +141,30 @@ public class Pookie {
                         System.out.println("____________________________________________________________");
                         System.out.println(" OK, I've marked this task as not done yet:");
                         System.out.println("   " + tasks.get(index));
+                        System.out.println("____________________________________________________________\n");
+                    } else {
+                        displayInvalidTaskNumberError();
+                    }
+                } catch (NumberFormatException e) {
+                    displayInvalidTaskNumberError();
+                }
+            } else if (input.startsWith("delete")) {
+                try {
+                    String[] parts = input.split(" ", 2);
+                    if (parts.length < 2) {
+                        System.out.println("____________________________________________________________");
+                        System.out.println(" usage: delete <task number>");
+                        System.out.println("____________________________________________________________\n");
+                        continue;
+                    }
+
+                    int index = Integer.parseInt(parts[1].trim()) - 1;
+                    if (index >= 0 && index < tasks.size()) {
+                        Task removedTask = tasks.remove(index);
+                        System.out.println("____________________________________________________________");
+                        System.out.println(" Noted. I've removed this task:");
+                        System.out.println("   " + removedTask);
+                        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
                         System.out.println("____________________________________________________________\n");
                     } else {
                         displayInvalidTaskNumberError();
