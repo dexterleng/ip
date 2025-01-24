@@ -145,8 +145,15 @@ public class Pookie {
                     displayInvalidTaskNumberError();
                 }
             } else if (input.startsWith("todo")) {
-                // TODO: handle error
-                String description = input.substring(5).trim();
+                String[] parts = input.split(" ", 2);
+                if (parts.length < 2) {
+                    System.out.println("____________________________________________________________");
+                    System.out.println(" usage: todo <description>");
+                    System.out.println("____________________________________________________________\n");
+                    continue;
+                }
+                String description = parts[1].trim();
+
                 tasks[taskCount++] = new Todo(description);
                 System.out.println("____________________________________________________________");
                 System.out.println(" Got it. I've added this task:");
@@ -154,25 +161,55 @@ public class Pookie {
                 System.out.println(" Now you have " + taskCount + " tasks in the list.");
                 System.out.println("____________________________________________________________\n");
             } else if (input.startsWith("deadline")) {
-                String[] parts = input.substring(9).split(" /by ");
-                if (parts.length == 2) {
-                    tasks[taskCount++] = new Deadline(parts[0].trim(), parts[1].trim());
+                String arguments = input.substring(8).trim();
+                String[] parts = arguments.split(" /by ", 2);
+                if (parts.length < 2) {
                     System.out.println("____________________________________________________________");
-                    System.out.println(" Got it. I've added this task:");
-                    System.out.println("   " + tasks[taskCount - 1]);
-                    System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                    System.out.println(" usage: deadline <description> /by <deadline>");
                     System.out.println("____________________________________________________________\n");
+                    continue;
                 }
+                String description = parts[0].trim();
+                String deadline = parts[1].trim();
+
+                tasks[taskCount++] = new Deadline(parts[0].trim(), parts[1].trim());
+                System.out.println("____________________________________________________________");
+                System.out.println(" Got it. I've added this task:");
+                System.out.println("   " + tasks[taskCount - 1]);
+                System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                System.out.println("____________________________________________________________\n");
             } else if (input.startsWith("event")) {
-                String[] parts = input.substring(6).split(" /from | /to ");
-                if (parts.length == 3) {
-                    tasks[taskCount++] = new Event(parts[0].trim(), parts[1].trim(), parts[2].trim());
+                String arguments = input.substring(5).trim();
+
+                // Ensure /from and /to are present and ordered correctly
+                int fromIndex = arguments.indexOf(" /from ");
+                int toIndex = arguments.indexOf(" /to ");
+
+                if (fromIndex == -1 || toIndex == -1 || fromIndex >= toIndex) {
                     System.out.println("____________________________________________________________");
-                    System.out.println(" Got it. I've added this task:");
-                    System.out.println("   " + tasks[taskCount - 1]);
-                    System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                    System.out.println(" usage: event <description> /from <start time> /to <end time>");
                     System.out.println("____________________________________________________________\n");
+                    continue;
                 }
+
+                // Extract description, from, and to parts
+                String description = arguments.substring(0, fromIndex).trim();
+                String from = arguments.substring(fromIndex + 7, toIndex + 1).trim();
+                String to = arguments.substring(toIndex + 5).trim();
+
+                if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                    System.out.println("____________________________________________________________");
+                    System.out.println(" usage: event <description> /from <start time> /to <end time>");
+                    System.out.println("____________________________________________________________\n");
+                    continue;
+                }
+
+                tasks[taskCount++] = new Event(description, from, to);
+                System.out.println("____________________________________________________________");
+                System.out.println(" Got it. I've added this task:");
+                System.out.println("   " + tasks[taskCount - 1]);
+                System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                System.out.println("____________________________________________________________\n");
             } else {
                 System.out.println("____________________________________________________________");
                 System.out.println(" Invalid command.");
