@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Pookie {
@@ -80,8 +81,7 @@ public class Pookie {
         System.out.println("____________________________________________________________\n");
 
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[100]; // Fixed-size array to store up to 100 tasks
-        int taskCount = 0; // Counter for the number of tasks stored
+        ArrayList<Task> tasks = new ArrayList<>();
 
         while (true) {
             String input = scanner.nextLine().trim();
@@ -93,12 +93,12 @@ public class Pookie {
                 break;
             } else if (input.equals("list")) {
                 System.out.println("____________________________________________________________");
-                if (taskCount == 0) {
+                if (tasks.isEmpty()) {
                     System.out.println(" No tasks added yet.");
                 } else {
                     System.out.println(" Here are the tasks in your list:");
-                    for (int i = 0; i < taskCount; i++) {
-                        System.out.println((i + 1) + "." + tasks[i]);
+                    for (int i = 0; i < tasks.size(); i++) {
+                        System.out.println((i + 1) + "." + tasks.get(i));
                     }
                 }
                 System.out.println("____________________________________________________________\n");
@@ -111,11 +111,11 @@ public class Pookie {
                     }
 
                     int index = Integer.parseInt(parts[1].trim()) - 1;
-                    if (index >= 0 && index < taskCount) {
-                        tasks[index].markAsDone();
+                    if (index >= 0 && index < tasks.size()) {
+                        tasks.get(index).markAsDone();
                         System.out.println("____________________________________________________________");
                         System.out.println(" Nice! I've marked this task as done:");
-                        System.out.println("   " + tasks[index]);
+                        System.out.println("   " + tasks.get(index));
                         System.out.println("____________________________________________________________\n");
                     } else {
                         displayInvalidTaskNumberError();
@@ -132,11 +132,11 @@ public class Pookie {
                     }
 
                     int index = Integer.parseInt(parts[1].trim()) - 1;
-                    if (index >= 0 && index < taskCount) {
-                        tasks[index].markAsNotDone();
+                    if (index >= 0 && index < tasks.size()) {
+                        tasks.get(index).markAsNotDone();
                         System.out.println("____________________________________________________________");
                         System.out.println(" OK, I've marked this task as not done yet:");
-                        System.out.println("   " + tasks[index]);
+                        System.out.println("   " + tasks.get(index));
                         System.out.println("____________________________________________________________\n");
                     } else {
                         displayInvalidTaskNumberError();
@@ -154,11 +154,11 @@ public class Pookie {
                 }
                 String description = parts[1].trim();
 
-                tasks[taskCount++] = new Todo(description);
+                tasks.add(new Todo(description));
                 System.out.println("____________________________________________________________");
                 System.out.println(" Got it. I've added this task:");
-                System.out.println("   " + tasks[taskCount - 1]);
-                System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                System.out.println("   " + tasks.get(tasks.size() - 1));
+                System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
                 System.out.println("____________________________________________________________\n");
             } else if (input.startsWith("deadline")) {
                 String arguments = input.substring(8).trim();
@@ -172,16 +172,15 @@ public class Pookie {
                 String description = parts[0].trim();
                 String deadline = parts[1].trim();
 
-                tasks[taskCount++] = new Deadline(parts[0].trim(), parts[1].trim());
+                tasks.add(new Deadline(description, deadline));
                 System.out.println("____________________________________________________________");
                 System.out.println(" Got it. I've added this task:");
-                System.out.println("   " + tasks[taskCount - 1]);
-                System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                System.out.println("   " + tasks.get(tasks.size() - 1));
+                System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
                 System.out.println("____________________________________________________________\n");
             } else if (input.startsWith("event")) {
                 String arguments = input.substring(5).trim();
 
-                // Ensure /from and /to are present and ordered correctly
                 int fromIndex = arguments.indexOf(" /from ");
                 int toIndex = arguments.indexOf(" /to ");
 
@@ -192,7 +191,6 @@ public class Pookie {
                     continue;
                 }
 
-                // Extract description, from, and to parts
                 String description = arguments.substring(0, fromIndex).trim();
                 String from = arguments.substring(fromIndex + 7, toIndex + 1).trim();
                 String to = arguments.substring(toIndex + 5).trim();
@@ -204,11 +202,11 @@ public class Pookie {
                     continue;
                 }
 
-                tasks[taskCount++] = new Event(description, from, to);
+                tasks.add(new Event(description, from, to));
                 System.out.println("____________________________________________________________");
                 System.out.println(" Got it. I've added this task:");
-                System.out.println("   " + tasks[taskCount - 1]);
-                System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                System.out.println("   " + tasks.get(tasks.size() - 1));
+                System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
                 System.out.println("____________________________________________________________\n");
             } else {
                 System.out.println("____________________________________________________________");
