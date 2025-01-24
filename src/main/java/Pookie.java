@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Pookie {
-    static class Task {
+    static abstract class Task {
         private String description;
         private boolean isDone;
 
@@ -24,6 +24,52 @@ public class Pookie {
 
         public void markAsNotDone() {
             this.isDone = false;
+        }
+
+        @Override
+        public String toString() {
+            return "[ ] " + description;
+        }
+    }
+
+    static class Todo extends Task {
+        public Todo(String description) {
+            super(description);
+        }
+
+        @Override
+        public String toString() {
+            return "[T][" + getStatusIcon() + "] " + getDescription();
+        }
+    }
+
+    static class Deadline extends Task {
+        private String by;
+
+        public Deadline(String description, String by) {
+            super(description);
+            this.by = by;
+        }
+
+        @Override
+        public String toString() {
+            return "[D][" + getStatusIcon() + "] " + getDescription() + " (by: " + by + ")";
+        }
+    }
+
+    static class Event extends Task {
+        private String from;
+        private String to;
+
+        public Event(String description, String from, String to) {
+            super(description);
+            this.from = from;
+            this.to = to;
+        }
+
+        @Override
+        public String toString() {
+            return "[E][" + getStatusIcon() + "] " + getDescription() + " (from: " + from + " to: " + to + ")";
         }
     }
 
@@ -52,7 +98,7 @@ public class Pookie {
                 } else {
                     System.out.println(" Here are the tasks in your list:");
                     for (int i = 0; i < taskCount; i++) {
-                        System.out.println((i + 1) + ".[" + tasks[i].getStatusIcon() + "] " + tasks[i].getDescription());
+                        System.out.println((i + 1) + "." + tasks[i]);
                     }
                 }
                 System.out.println("____________________________________________________________\n");
@@ -69,7 +115,7 @@ public class Pookie {
                         tasks[index].markAsDone();
                         System.out.println("____________________________________________________________");
                         System.out.println(" Nice! I've marked this task as done:");
-                        System.out.println("   [X] " + tasks[index].getDescription());
+                        System.out.println("   " + tasks[index]);
                         System.out.println("____________________________________________________________\n");
                     } else {
                         System.out.println("____________________________________________________________");
@@ -92,7 +138,7 @@ public class Pookie {
                         tasks[index].markAsNotDone();
                         System.out.println("____________________________________________________________");
                         System.out.println(" OK, I've marked this task as not done yet:");
-                        System.out.println("   [ ] " + tasks[index].getDescription());
+                        System.out.println("   " + tasks[index]);
                         System.out.println("____________________________________________________________\n");
                     } else {
                         displayInvalidTaskNumberError();
@@ -100,10 +146,38 @@ public class Pookie {
                 } catch (NumberFormatException e) {
                     displayInvalidTaskNumberError();
                 }
-            } else {
-                tasks[taskCount++] = new Task(input);
+            } else if (input.startsWith("todo")) {
+                // TODO: handle error
+                String description = input.substring(5).trim();
+                tasks[taskCount++] = new Todo(description);
                 System.out.println("____________________________________________________________");
-                System.out.println(" added: " + input);
+                System.out.println(" Got it. I've added this task:");
+                System.out.println("   " + tasks[taskCount - 1]);
+                System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                System.out.println("____________________________________________________________\n");
+            } else if (input.startsWith("deadline")) {
+                String[] parts = input.substring(9).split(" /by ");
+                if (parts.length == 2) {
+                    tasks[taskCount++] = new Deadline(parts[0].trim(), parts[1].trim());
+                    System.out.println("____________________________________________________________");
+                    System.out.println(" Got it. I've added this task:");
+                    System.out.println("   " + tasks[taskCount - 1]);
+                    System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                    System.out.println("____________________________________________________________\n");
+                }
+            } else if (input.startsWith("event")) {
+                String[] parts = input.substring(6).split(" /from | /to ");
+                if (parts.length == 3) {
+                    tasks[taskCount++] = new Event(parts[0].trim(), parts[1].trim(), parts[2].trim());
+                    System.out.println("____________________________________________________________");
+                    System.out.println(" Got it. I've added this task:");
+                    System.out.println("   " + tasks[taskCount - 1]);
+                    System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                    System.out.println("____________________________________________________________\n");
+                }
+            } else {
+                System.out.println("____________________________________________________________");
+                System.out.println(" Invalid command.");
                 System.out.println("____________________________________________________________\n");
             }
         }
