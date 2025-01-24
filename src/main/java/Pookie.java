@@ -56,9 +56,15 @@ public class Pookie {
                     }
                 }
                 System.out.println("____________________________________________________________\n");
-            } else if (input.startsWith("mark ")) {
+            } else if (input.startsWith("mark")) {
                 try {
-                    int index = Integer.parseInt(input.substring(5)) - 1;
+                    String[] parts = input.split(" ", 2);
+                    if (parts.length < 2) {
+                        displayInvalidTaskNumberError();
+                        continue;
+                    }
+
+                    int index = Integer.parseInt(parts[1].trim()) - 1;
                     if (index >= 0 && index < taskCount) {
                         tasks[index].markAsDone();
                         System.out.println("____________________________________________________________");
@@ -71,13 +77,17 @@ public class Pookie {
                         System.out.println("____________________________________________________________\n");
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("____________________________________________________________");
-                    System.out.println(" Please provide a valid task number.");
-                    System.out.println("____________________________________________________________\n");
+                    displayInvalidTaskNumberError();
                 }
-            } else if (input.startsWith("unmark ")) {
+            } else if (input.startsWith("unmark")) {
                 try {
-                    int index = Integer.parseInt(input.substring(7)) - 1;
+                    String[] parts = input.split(" ", 2);
+                    if (parts.length < 2) {
+                        displayInvalidTaskNumberError();
+                        continue;
+                    }
+
+                    int index = Integer.parseInt(parts[1].trim()) - 1;
                     if (index >= 0 && index < taskCount) {
                         tasks[index].markAsNotDone();
                         System.out.println("____________________________________________________________");
@@ -85,14 +95,10 @@ public class Pookie {
                         System.out.println("   [ ] " + tasks[index].getDescription());
                         System.out.println("____________________________________________________________\n");
                     } else {
-                        System.out.println("____________________________________________________________");
-                        System.out.println(" Invalid task number.");
-                        System.out.println("____________________________________________________________\n");
+                        displayInvalidTaskNumberError();
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("____________________________________________________________");
-                    System.out.println(" Please provide a valid task number.");
-                    System.out.println("____________________________________________________________\n");
+                    displayInvalidTaskNumberError();
                 }
             } else {
                 tasks[taskCount++] = new Task(input);
@@ -103,5 +109,11 @@ public class Pookie {
         }
 
         scanner.close();
+    }
+
+    private static void displayInvalidTaskNumberError() {
+        System.out.println("____________________________________________________________");
+        System.out.println(" Please provide a valid task number.");
+        System.out.println("____________________________________________________________\n");
     }
 }
