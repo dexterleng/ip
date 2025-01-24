@@ -118,9 +118,7 @@ public class Pookie {
                         System.out.println("   " + tasks[index]);
                         System.out.println("____________________________________________________________\n");
                     } else {
-                        System.out.println("____________________________________________________________");
-                        System.out.println(" Invalid task number.");
-                        System.out.println("____________________________________________________________\n");
+                        displayInvalidTaskNumberError();
                     }
                 } catch (NumberFormatException e) {
                     displayInvalidTaskNumberError();
