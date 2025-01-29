@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 public class Pookie {
     private static final String FILE_PATH = "./data/pookie.txt";
-    private static final File FILE = new File(FILE_PATH);
     public static final DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
     public static final DateTimeFormatter OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma");
 
