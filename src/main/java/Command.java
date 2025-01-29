@@ -1,5 +1,5 @@
 public abstract class Command {
-    public void execute(String input, TaskList tasks, Storage storage, boolean testMode) throws Exception {
+    public void execute(String input, Ui ui, TaskList tasks, Storage storage, boolean testMode) throws Exception {
 
     }
 

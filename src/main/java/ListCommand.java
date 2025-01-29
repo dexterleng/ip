@@ -2,16 +2,16 @@ import java.io.IOException;
 
 public class ListCommand extends Command {
     @Override
-    public void execute(String input, TaskList tasks, Storage storage, boolean testMode) throws Exception {
-        System.out.println("____________________________________________________________");
+    public void execute(String input, Ui ui, TaskList tasks, Storage storage, boolean testMode) throws Exception {
         if (tasks.isEmpty()) {
-            System.out.println(" No tasks added yet.");
+            ui.showMessage("No tasks added yet.");
         } else {
-            System.out.println(" Here are the tasks in your list:");
+            String[] messages = new String[tasks.size() + 1];
+            messages[0] = "Here are the tasks in your list:";
             for (int i = 0; i < tasks.size(); i++) {
-                System.out.println((i + 1) + "." + tasks.get(i));
+                messages[i + 1] = (i + 1) + ". " + tasks.get(i);
             }
+            ui.showMessages(messages);
         }
-        System.out.println("____________________________________________________________\n");
     }
 }
