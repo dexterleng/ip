@@ -1,14 +1,28 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Pookie {
-    static abstract class Task {
-        private String description;
-        private boolean isDone;
+    private static final String FILE_PATH = "./data/pookie.txt";
+    private static final File FILE = new File(FILE_PATH);
 
-        public Task(String description) {
+    static class CorruptFileException extends Exception {
+        public CorruptFileException() {
+            super("Save file is corrupt.");
+        }
+    }
+
+    static abstract class Task {
+        private boolean isDone;
+        private String description;
+
+        public Task(Boolean isDone, String description) {
+            this.isDone = isDone;
             this.description = description;
-            this.isDone = false;
+        }
+
+        public boolean getIsDone() {
+            return isDone;
         }
 
         public String getDescription() {
@@ -31,24 +45,31 @@ public class Pookie {
         public String toString() {
             return "[ ] " + description;
         }
+
+        public abstract String toFileString();
     }
 
     static class Todo extends Task {
-        public Todo(String description) {
-            super(description);
+        public Todo(Boolean isDone, String description) {
+            super(isDone, description);
         }
 
         @Override
         public String toString() {
             return "[T][" + getStatusIcon() + "] " + getDescription();
         }
+
+        @Override
+        public String toFileString() {
+            return "T | " + (getIsDone() ? 1 : 0) + " | " + getDescription();
+        }
     }
 
     static class Deadline extends Task {
         private String by;
 
-        public Deadline(String description, String by) {
-            super(description);
+        public Deadline(Boolean isDone, String description, String by) {
+            super(isDone, description);
             this.by = by;
         }
 
@@ -56,14 +77,19 @@ public class Pookie {
         public String toString() {
             return "[D][" + getStatusIcon() + "] " + getDescription() + " (by: " + by + ")";
         }
+
+        @Override
+        public String toFileString() {
+            return "D | " + (getIsDone() ? 1 : 0) + " | " + getDescription() + " | " + by;
+        }
     }
 
     static class Event extends Task {
         private String from;
         private String to;
 
-        public Event(String description, String from, String to) {
-            super(description);
+        public Event(Boolean isDone, String description, String from, String to) {
+            super(isDone, description);
             this.from = from;
             this.to = to;
         }
@@ -72,16 +98,21 @@ public class Pookie {
         public String toString() {
             return "[E][" + getStatusIcon() + "] " + getDescription() + " (from: " + from + " to: " + to + ")";
         }
+
+        @Override
+        public String toFileString() {
+            return "E | " + (getIsDone() ? 1 : 0) + " | " + getDescription() + " | " + from + " | " + to;
+        }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CorruptFileException, IOException {
         System.out.println("____________________________________________________________");
         System.out.println(" Hello! I'm Pookie");
         System.out.println(" What can I do for you?");
         System.out.println("____________________________________________________________\n");
 
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks = loadTasks();
 
         while (true) {
             String input = scanner.nextLine().trim();
@@ -90,6 +121,7 @@ public class Pookie {
                 System.out.println("____________________________________________________________");
                 System.out.println(" Bye. Hope to see you again soon!");
                 System.out.println("____________________________________________________________");
+                saveTasks(tasks);
                 break;
             } else if (input.equals("list")) {
                 System.out.println("____________________________________________________________");
@@ -182,7 +214,7 @@ public class Pookie {
                 }
                 String description = parts[1].trim();
 
-                tasks.add(new Todo(description));
+                tasks.add(new Todo(false, description));
                 System.out.println("____________________________________________________________");
                 System.out.println(" Got it. I've added this task:");
                 System.out.println("   " + tasks.get(tasks.size() - 1));
@@ -200,7 +232,7 @@ public class Pookie {
                 String description = parts[0].trim();
                 String deadline = parts[1].trim();
 
-                tasks.add(new Deadline(description, deadline));
+                tasks.add(new Deadline(false, description, deadline));
                 System.out.println("____________________________________________________________");
                 System.out.println(" Got it. I've added this task:");
                 System.out.println("   " + tasks.get(tasks.size() - 1));
@@ -230,7 +262,7 @@ public class Pookie {
                     continue;
                 }
 
-                tasks.add(new Event(description, from, to));
+                tasks.add(new Event(false, description, from, to));
                 System.out.println("____________________________________________________________");
                 System.out.println(" Got it. I've added this task:");
                 System.out.println("   " + tasks.get(tasks.size() - 1));
@@ -250,5 +282,56 @@ public class Pookie {
         System.out.println("____________________________________________________________");
         System.out.println(" Please provide a valid task number.");
         System.out.println("____________________________________________________________\n");
+    }
+
+    private static ArrayList<Task> loadTasks() throws CorruptFileException, IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE))) {
+            ArrayList<Task> tasks = new ArrayList<>();
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(" \\| ");
+                if (parts.length < 3) throw new CorruptFileException();
+
+                if (!parts[1].equals("1") && !parts[1].equals("0")) {
+                    throw new CorruptFileException();
+                }
+                boolean isDone = parts[1].equals("1");
+                String description = parts[2];
+
+                Task task = null;
+                switch (parts[0]) {
+                    case "T":
+                        if (parts.length != 3) throw new CorruptFileException();
+                        task = new Todo(isDone, description);
+                        break;
+                    case "D":
+                        if (parts.length != 4) throw new CorruptFileException();
+                        String by = parts[3];
+                        task = new Deadline(isDone, description, by);
+                        break;
+                    case "E":
+                        if (parts.length != 5) throw new CorruptFileException();
+                        String from = parts[3];
+                        String to = parts[4];
+                        task = new Event(isDone, description, from, to);
+                        break;
+                    default:
+                        throw new CorruptFileException();
+                }
+                tasks.add(task);
+            }
+            return tasks;
+        } catch (FileNotFoundException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    private static void saveTasks(ArrayList<Task> tasks) throws IOException {
+        FILE.getParentFile().mkdirs();
+        PrintWriter pw = new PrintWriter(new FileWriter(FILE));
+        for (Task task : tasks) {
+            pw.println(task.toFileString());
+        }
+        pw.close();
     }
 }
