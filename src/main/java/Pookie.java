@@ -10,7 +10,16 @@ public class Pookie {
     private static final File FILE = new File(FILE_PATH);
     private static final DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
     private static final DateTimeFormatter OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma");
-    private static Storage storage = new Storage(FILE);
+
+    private Storage storage;
+    private TaskList tasks;
+    private boolean testMode;
+
+    public Pookie(Storage storage, boolean testMode) throws CorruptFileException, IOException {
+        this.storage = storage;
+        this.tasks = new TaskList(storage.loadTasks());
+        this.testMode = testMode;
+    }
 
     static class CorruptFileException extends Exception {
         public CorruptFileException() {
@@ -228,13 +237,18 @@ public class Pookie {
             testMode = true;
         }
 
+        Storage storage = new Storage(new File(FILE_PATH));
+        Pookie pookie = new Pookie(storage, testMode);
+        pookie.run();
+    }
+
+    public void run() throws IOException {
         System.out.println("____________________________________________________________");
         System.out.println(" Hello! I'm Pookie");
         System.out.println(" What can I do for you?");
         System.out.println("____________________________________________________________\n");
 
         Scanner scanner = new Scanner(System.in);
-        TaskList tasks = new TaskList(storage.loadTasks());
 
         while (true) {
             String input = scanner.nextLine().trim();
@@ -417,13 +431,13 @@ public class Pookie {
         scanner.close();
     }
 
-    private static void displayInvalidTaskNumberError() {
+    private void displayInvalidTaskNumberError() {
         System.out.println("____________________________________________________________");
         System.out.println(" Please provide a valid task number.");
         System.out.println("____________________________________________________________\n");
     }
 
-    private static void displayInvalidDateError() {
+    private void displayInvalidDateError() {
         System.out.println("____________________________________________________________");
         System.out.println(" Please provide a valid date in the format dd/MM/yyyy HHmm e.g. 29/01/2001 1159.");
         System.out.println("____________________________________________________________\n");
