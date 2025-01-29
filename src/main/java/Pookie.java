@@ -10,7 +10,7 @@ public class Pookie {
     private static final File FILE = new File(FILE_PATH);
     private static final DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
     private static final DateTimeFormatter OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma");
-    private static Storage storage = new Storage();
+    private static Storage storage = new Storage(FILE);
 
     static class CorruptFileException extends Exception {
         public CorruptFileException() {
@@ -112,8 +112,14 @@ public class Pookie {
     }
 
     static class Storage {
+        private File file;
+
+        public Storage(File file) {
+            this.file = file;
+        }
+
         public ArrayList<Task> loadTasks() throws CorruptFileException, IOException {
-            try (BufferedReader br = new BufferedReader(new FileReader(FILE))) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 ArrayList<Task> tasks = new ArrayList<>();
                 String line;
                 while ((line = br.readLine()) != null) {
@@ -169,8 +175,8 @@ public class Pookie {
         }
 
         public void saveTasks(ArrayList<Task> tasks) throws IOException {
-            FILE.getParentFile().mkdirs();
-            PrintWriter pw = new PrintWriter(new FileWriter(FILE));
+            file.getParentFile().mkdirs();
+            PrintWriter pw = new PrintWriter(new FileWriter(file));
             for (Task task : tasks) {
                 pw.println(task.toFileString());
             }
