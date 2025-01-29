@@ -41,16 +41,14 @@ public class Pookie {
             "What can I do for you?"
         );
 
-        Scanner scanner = new Scanner(System.in);
-
         boolean isExit = false;
         while (!isExit) {
-            String input = scanner.nextLine().trim();
+            String input = ui.readCommand();
             Command command = Parser.parse(input);
             command.execute(input, ui, tasks, storage, testMode);
             isExit = command.isExit();
         }
 
-        scanner.close();
+        ui.close();
     }
 }
