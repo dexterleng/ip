@@ -178,6 +178,42 @@ public class Pookie {
         }
     }
 
+    static class TaskList {
+        private ArrayList<Task> tasks;
+
+        public TaskList() {
+            this.tasks = new ArrayList<>();
+        }
+
+        public TaskList(ArrayList<Task> tasks) {
+            this.tasks = tasks;
+        }
+
+        public Task get(int index) {
+            return tasks.get(index);
+        }
+
+        public void add(Task task) {
+            tasks.add(task);
+        }
+
+        public Task remove(int index) {
+            return tasks.remove(index);
+        }
+
+        public int size() {
+            return tasks.size();
+        }
+
+        public boolean isEmpty() {
+            return tasks.isEmpty();
+        }
+
+        public ArrayList<Task> getList() {
+            return new ArrayList<>(tasks);
+        }
+    }
+
     public static void main(String[] args) throws CorruptFileException, IOException {
         boolean testMode = false;
 
@@ -192,7 +228,7 @@ public class Pookie {
         System.out.println("____________________________________________________________\n");
 
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = storage.loadTasks();
+        TaskList tasks = new TaskList(storage.loadTasks());
 
         while (true) {
             String input = scanner.nextLine().trim();
@@ -202,7 +238,7 @@ public class Pookie {
                 System.out.println(" Bye. Hope to see you again soon!");
                 System.out.println("____________________________________________________________");
                 if (!testMode) {
-                    storage.saveTasks(tasks); // Only save if not in test mode
+                    storage.saveTasks(tasks.getList()); // Only save if not in test mode
                 }
                 break;
             } else if (input.equals("list")) {
