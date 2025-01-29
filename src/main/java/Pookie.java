@@ -10,6 +10,7 @@ public class Pookie {
     private static final File FILE = new File(FILE_PATH);
     private static final DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
     private static final DateTimeFormatter OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma");
+    private static Storage storage = new Storage();
 
     static class CorruptFileException extends Exception {
         public CorruptFileException() {
@@ -110,6 +111,73 @@ public class Pookie {
         }
     }
 
+    static class Storage {
+        public ArrayList<Task> loadTasks() throws CorruptFileException, IOException {
+            try (BufferedReader br = new BufferedReader(new FileReader(FILE))) {
+                ArrayList<Task> tasks = new ArrayList<>();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.split(" \\| ");
+                    if (parts.length < 3) throw new CorruptFileException();
+
+                    if (!parts[1].equals("1") && !parts[1].equals("0")) {
+                        throw new CorruptFileException();
+                    }
+                    boolean isDone = parts[1].equals("1");
+                    String description = parts[2];
+
+                    Task task = null;
+                    switch (parts[0]) {
+                        case "T":
+                            if (parts.length != 3) throw new CorruptFileException();
+                            task = new Todo(isDone, description);
+                            break;
+                        case "D":
+                            if (parts.length != 4) throw new CorruptFileException();
+                            String byStr = parts[3];
+                            LocalDateTime by = null;
+                            try {
+                                by = LocalDateTime.parse(byStr, OUTPUT_FORMATTER);
+                            } catch (DateTimeParseException e) {
+                                throw new CorruptFileException();
+                            }
+                            task = new Deadline(isDone, description, by);
+                            break;
+                        case "E":
+                            if (parts.length != 5) throw new CorruptFileException();
+                            String fromStr = parts[3];
+                            String toStr = parts[4];
+                            LocalDateTime from = null;
+                            LocalDateTime to = null;
+                            try {
+                                from = LocalDateTime.parse(fromStr, OUTPUT_FORMATTER);
+                                to = LocalDateTime.parse(toStr, OUTPUT_FORMATTER);
+                            } catch (DateTimeParseException e) {
+                                throw new CorruptFileException();
+                            }
+                            task = new Event(isDone, description, from, to);
+                            break;
+                        default:
+                            throw new CorruptFileException();
+                    }
+                    tasks.add(task);
+                }
+                return tasks;
+            } catch (FileNotFoundException e) {
+                return new ArrayList<>();
+            }
+        }
+
+        public void saveTasks(ArrayList<Task> tasks) throws IOException {
+            FILE.getParentFile().mkdirs();
+            PrintWriter pw = new PrintWriter(new FileWriter(FILE));
+            for (Task task : tasks) {
+                pw.println(task.toFileString());
+            }
+            pw.close();
+        }
+    }
+
     public static void main(String[] args) throws CorruptFileException, IOException {
         boolean testMode = false;
 
@@ -124,7 +192,7 @@ public class Pookie {
         System.out.println("____________________________________________________________\n");
 
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = loadTasks();
+        ArrayList<Task> tasks = storage.loadTasks();
 
         while (true) {
             String input = scanner.nextLine().trim();
@@ -134,7 +202,7 @@ public class Pookie {
                 System.out.println(" Bye. Hope to see you again soon!");
                 System.out.println("____________________________________________________________");
                 if (!testMode) {
-                    saveTasks(tasks); // Only save if not in test mode
+                    storage.saveTasks(tasks); // Only save if not in test mode
                 }
                 break;
             } else if (input.equals("list")) {
@@ -317,70 +385,5 @@ public class Pookie {
         System.out.println("____________________________________________________________");
         System.out.println(" Please provide a valid date in the format dd/MM/yyyy HHmm e.g. 29/01/2001 1159.");
         System.out.println("____________________________________________________________\n");
-    }
-
-    private static ArrayList<Task> loadTasks() throws CorruptFileException, IOException {
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE))) {
-            ArrayList<Task> tasks = new ArrayList<>();
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(" \\| ");
-                if (parts.length < 3) throw new CorruptFileException();
-
-                if (!parts[1].equals("1") && !parts[1].equals("0")) {
-                    throw new CorruptFileException();
-                }
-                boolean isDone = parts[1].equals("1");
-                String description = parts[2];
-
-                Task task = null;
-                switch (parts[0]) {
-                    case "T":
-                        if (parts.length != 3) throw new CorruptFileException();
-                        task = new Todo(isDone, description);
-                        break;
-                    case "D":
-                        if (parts.length != 4) throw new CorruptFileException();
-                        String byStr = parts[3];
-                        LocalDateTime by = null;
-                        try {
-                            by = LocalDateTime.parse(byStr, OUTPUT_FORMATTER);
-                        } catch (DateTimeParseException e) {
-                            throw new CorruptFileException();
-                        }
-                        task = new Deadline(isDone, description, by);
-                        break;
-                    case "E":
-                        if (parts.length != 5) throw new CorruptFileException();
-                        String fromStr = parts[3];
-                        String toStr = parts[4];
-                        LocalDateTime from = null;
-                        LocalDateTime to = null;
-                        try {
-                            from = LocalDateTime.parse(fromStr, OUTPUT_FORMATTER);
-                            to = LocalDateTime.parse(toStr, OUTPUT_FORMATTER);
-                        } catch (DateTimeParseException e) {
-                            throw new CorruptFileException();
-                        }
-                        task = new Event(isDone, description, from, to);
-                        break;
-                    default:
-                        throw new CorruptFileException();
-                }
-                tasks.add(task);
-            }
-            return tasks;
-        } catch (FileNotFoundException e) {
-            return new ArrayList<>();
-        }
-    }
-
-    private static void saveTasks(ArrayList<Task> tasks) throws IOException {
-        FILE.getParentFile().mkdirs();
-        PrintWriter pw = new PrintWriter(new FileWriter(FILE));
-        for (Task task : tasks) {
-            pw.println(task.toFileString());
-        }
-        pw.close();
     }
 }
