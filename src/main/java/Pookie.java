@@ -1,10 +1,15 @@
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Pookie {
     private static final String FILE_PATH = "./data/pookie.txt";
     private static final File FILE = new File(FILE_PATH);
+    private static final DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
+    private static final DateTimeFormatter OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma");
 
     static class CorruptFileException extends Exception {
         public CorruptFileException() {
@@ -66,29 +71,29 @@ public class Pookie {
     }
 
     static class Deadline extends Task {
-        private String by;
+        private LocalDateTime by;
 
-        public Deadline(Boolean isDone, String description, String by) {
+        public Deadline(Boolean isDone, String description, LocalDateTime by) {
             super(isDone, description);
             this.by = by;
         }
 
         @Override
         public String toString() {
-            return "[D][" + getStatusIcon() + "] " + getDescription() + " (by: " + by + ")";
+            return "[D][" + getStatusIcon() + "] " + getDescription() + " (by: " + by.format(OUTPUT_FORMATTER) + ")";
         }
 
         @Override
         public String toFileString() {
-            return "D | " + (getIsDone() ? 1 : 0) + " | " + getDescription() + " | " + by;
+            return "D | " + (getIsDone() ? 1 : 0) + " | " + getDescription() + " | " + by.format(OUTPUT_FORMATTER);
         }
     }
 
     static class Event extends Task {
-        private String from;
-        private String to;
+        private LocalDateTime from;
+        private LocalDateTime to;
 
-        public Event(Boolean isDone, String description, String from, String to) {
+        public Event(Boolean isDone, String description, LocalDateTime from, LocalDateTime to) {
             super(isDone, description);
             this.from = from;
             this.to = to;
@@ -96,16 +101,23 @@ public class Pookie {
 
         @Override
         public String toString() {
-            return "[E][" + getStatusIcon() + "] " + getDescription() + " (from: " + from + " to: " + to + ")";
+            return "[E][" + getStatusIcon() + "] " + getDescription() + " (from: " + from.format(OUTPUT_FORMATTER) + " to: " + to.format(OUTPUT_FORMATTER) + ")";
         }
 
         @Override
         public String toFileString() {
-            return "E | " + (getIsDone() ? 1 : 0) + " | " + getDescription() + " | " + from + " | " + to;
+            return "E | " + (getIsDone() ? 1 : 0) + " | " + getDescription() + " | " + from.format(OUTPUT_FORMATTER) + " | " + to.format(OUTPUT_FORMATTER);
         }
     }
 
     public static void main(String[] args) throws CorruptFileException, IOException {
+        boolean testMode = false;
+
+        // Check for test mode from command-line arguments
+        if (args.length > 0 && args[0].equals("--test")) {
+            testMode = true;
+        }
+
         System.out.println("____________________________________________________________");
         System.out.println(" Hello! I'm Pookie");
         System.out.println(" What can I do for you?");
@@ -121,7 +133,9 @@ public class Pookie {
                 System.out.println("____________________________________________________________");
                 System.out.println(" Bye. Hope to see you again soon!");
                 System.out.println("____________________________________________________________");
-                saveTasks(tasks);
+                if (!testMode) {
+                    saveTasks(tasks); // Only save if not in test mode
+                }
                 break;
             } else if (input.equals("list")) {
                 System.out.println("____________________________________________________________");
@@ -230,8 +244,14 @@ public class Pookie {
                     continue;
                 }
                 String description = parts[0].trim();
-                String deadline = parts[1].trim();
-
+                String deadlineStr = parts[1].trim();
+                LocalDateTime deadline = null;
+                try {
+                    deadline = LocalDateTime.parse(deadlineStr, INPUT_FORMATTER);
+                } catch (DateTimeParseException e) {
+                    displayInvalidDateError();
+                    continue;
+                }
                 tasks.add(new Deadline(false, description, deadline));
                 System.out.println("____________________________________________________________");
                 System.out.println(" Got it. I've added this task:");
@@ -252,13 +272,22 @@ public class Pookie {
                 }
 
                 String description = arguments.substring(0, fromIndex).trim();
-                String from = arguments.substring(fromIndex + 7, toIndex + 1).trim();
-                String to = arguments.substring(toIndex + 5).trim();
-
-                if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                String fromStr = arguments.substring(fromIndex + 7, toIndex + 1).trim();
+                String toStr = arguments.substring(toIndex + 5).trim();
+                if (description.isEmpty() || fromStr.isEmpty() || toStr.isEmpty()) {
                     System.out.println("____________________________________________________________");
                     System.out.println(" usage: event <description> /from <start time> /to <end time>");
                     System.out.println("____________________________________________________________\n");
+                    continue;
+                }
+
+                LocalDateTime from = null;
+                LocalDateTime to = null;
+                try {
+                    from = LocalDateTime.parse(fromStr, INPUT_FORMATTER);
+                    to = LocalDateTime.parse(toStr, INPUT_FORMATTER);
+                } catch (DateTimeParseException e) {
+                    displayInvalidDateError();
                     continue;
                 }
 
@@ -284,6 +313,12 @@ public class Pookie {
         System.out.println("____________________________________________________________\n");
     }
 
+    private static void displayInvalidDateError() {
+        System.out.println("____________________________________________________________");
+        System.out.println(" Please provide a valid date in the format dd/MM/yyyy HHmm e.g. 29/01/2001 1159.");
+        System.out.println("____________________________________________________________\n");
+    }
+
     private static ArrayList<Task> loadTasks() throws CorruptFileException, IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(FILE))) {
             ArrayList<Task> tasks = new ArrayList<>();
@@ -306,13 +341,27 @@ public class Pookie {
                         break;
                     case "D":
                         if (parts.length != 4) throw new CorruptFileException();
-                        String by = parts[3];
+                        String byStr = parts[3];
+                        LocalDateTime by = null;
+                        try {
+                            by = LocalDateTime.parse(byStr, OUTPUT_FORMATTER);
+                        } catch (DateTimeParseException e) {
+                            throw new CorruptFileException();
+                        }
                         task = new Deadline(isDone, description, by);
                         break;
                     case "E":
                         if (parts.length != 5) throw new CorruptFileException();
-                        String from = parts[3];
-                        String to = parts[4];
+                        String fromStr = parts[3];
+                        String toStr = parts[4];
+                        LocalDateTime from = null;
+                        LocalDateTime to = null;
+                        try {
+                            from = LocalDateTime.parse(fromStr, OUTPUT_FORMATTER);
+                            to = LocalDateTime.parse(toStr, OUTPUT_FORMATTER);
+                        } catch (DateTimeParseException e) {
+                            throw new CorruptFileException();
+                        }
                         task = new Event(isDone, description, from, to);
                         break;
                     default:

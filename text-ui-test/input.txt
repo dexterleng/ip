@@ -3,17 +3,21 @@ todo
 todo borrow book
 deadline return book
 deadline return book /by
-deadline /by Sunday
+deadline /by 69
+deadline /by 29/01/2001 1159
 deadline return book /by Sunday
 event
 event project meeting
 event project meeting /from
-event project meeting /from Mon 2pm
-event project meeting /from Mon 2pm /to
-event project meeting /from /to 4pm
-event project meeting /to Mon 2pm
-event project meeting /to Mon 2pm /from 4pm
-event project meeting /from Mon 2pm /to 4pm
+event project meeting /from 69
+event project meeting /from 29/01/2001 1159
+event project meeting /from 29/01/2001 1159 /to
+event project meeting /from /to 29/01/2001 1159
+event project meeting /to 69
+event project meeting /to Mon 29/01/2001 1159
+event project meeting /from 69 /to 69
+event project meeting /to Mon 29/01/2001 1159 /from 29/01/2001 1159
+event project meeting /from Mon 29/01/2001 1159 /to 29/01/2001 1159
 list
 mark 1
 mark 69
