@@ -1,11 +1,12 @@
 package pookie;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+
 import pookie.command.Command;
 import pookie.ui.ConsoleUi;
 import pookie.ui.Ui;
-
-import java.io.*;
-import java.time.format.DateTimeFormatter;
 
 /**
  * The main class for the Pookie application.
@@ -24,7 +25,7 @@ public class Pookie {
      * Formatter for displaying dates in the output format "MMM dd yyyy, h:mma".
      */
     public static final DateTimeFormatter OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma");
-
+    private static final String FILE_PATH = "./data/pookie.txt";
     private Ui ui;
     private Storage storage;
     private TaskList tasks;

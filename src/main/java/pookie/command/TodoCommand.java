@@ -17,9 +17,9 @@ public class TodoCommand extends Command {
 
         tasks.add(new Todo(false, description));
         ui.showMessages(
-            "Got it. I've added this task:",
-            "  " + tasks.get(tasks.size() - 1),
-            "Now you have " + tasks.size() + " tasks in the list."
+                "Got it. I've added this task:",
+                "  " + tasks.get(tasks.size() - 1),
+                "Now you have " + tasks.size() + " tasks in the list."
         );
     }
 }

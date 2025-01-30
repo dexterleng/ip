@@ -1,8 +1,8 @@
 package pookie.model;
 
-import pookie.Pookie;
-
 import java.time.LocalDateTime;
+
+import pookie.Pookie;
 
 /**
  * Represents a task with a specific deadline.

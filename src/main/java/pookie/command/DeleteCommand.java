@@ -1,8 +1,8 @@
 package pookie.command;
 
 import pookie.Storage;
-import pookie.model.Task;
 import pookie.TaskList;
+import pookie.model.Task;
 import pookie.ui.Ui;
 
 public class DeleteCommand extends Command {
@@ -19,9 +19,9 @@ public class DeleteCommand extends Command {
             if (index >= 0 && index < tasks.size()) {
                 Task removedTask = tasks.remove(index);
                 ui.showMessages(
-                    "Noted. I've removed this task:",
-                    "  " + removedTask,
-                    "Now you have " + tasks.size() + " tasks in the list."
+                        "Noted. I've removed this task:",
+                        "  " + removedTask,
+                        "Now you have " + tasks.size() + " tasks in the list."
                 );
             } else {
                 ui.showInvalidTaskNumberError();

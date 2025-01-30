@@ -1,8 +1,8 @@
 package pookie.model;
 
-import pookie.Pookie;
-
 import java.time.LocalDateTime;
+
+import pookie.Pookie;
 
 /**
  * Represents an event task with a specific start and end time.

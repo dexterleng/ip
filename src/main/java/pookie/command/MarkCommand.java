@@ -18,8 +18,8 @@ public class MarkCommand extends Command {
             if (index >= 0 && index < tasks.size()) {
                 tasks.get(index).markAsDone();
                 ui.showMessages(
-                    "Nice! I've marked this task as done:",
-                    "  " + tasks.get(index)
+                        "Nice! I've marked this task as done:",
+                        "  " + tasks.get(index)
                 );
             } else {
                 ui.showInvalidTaskNumberError();

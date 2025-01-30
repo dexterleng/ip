@@ -1,8 +1,8 @@
 package pookie;
 
-import pookie.model.Task;
-
 import java.util.ArrayList;
+
+import pookie.model.Task;
 
 /**
  * Represents a list of tasks.
