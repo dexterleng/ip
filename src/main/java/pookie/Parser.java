@@ -2,7 +2,18 @@ package pookie;
 
 import pookie.command.*;
 
+/**
+ * Parses user input and returns the corresponding command to execute.
+ * The Parser determines which command to return based on the input string.
+ */
 public class Parser {
+
+    /**
+     * Parses the given user input and returns the appropriate command object.
+     *
+     * @param input The user input as a string.
+     * @return The corresponding Command object to execute.
+     */
     public static Command parse(String input) {
         if (input.equals("bye")) {
             return new ByeCommand();
