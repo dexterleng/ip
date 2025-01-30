@@ -25,7 +25,6 @@ public class Pookie {
      * Formatter for displaying dates in the output format "MMM dd yyyy, h:mma".
      */
     public static final DateTimeFormatter OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma");
-    private static final String FILE_PATH = "./data/pookie.txt";
     private Ui ui;
     private Storage storage;
     private TaskList tasks;
