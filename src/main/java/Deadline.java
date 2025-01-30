@@ -8,6 +8,10 @@ public class Deadline extends Task {
         this.by = by;
     }
 
+    public LocalDateTime getDeadline() {
+        return by;
+    }
+
     @Override
     public String toString() {
         return "[D][" + getStatusIcon() + "] " + getDescription() + " (by: " + by.format(Pookie.OUTPUT_FORMATTER) + ")";

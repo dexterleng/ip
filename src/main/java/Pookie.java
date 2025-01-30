@@ -29,7 +29,7 @@ public class Pookie {
             testMode = true;
         }
 
-        Ui ui = new Ui();
+        Ui ui = new ConsoleUi();
         Storage storage = new Storage(new File(FILE_PATH));
         Pookie pookie = new Pookie(ui, storage, testMode);
         pookie.run();

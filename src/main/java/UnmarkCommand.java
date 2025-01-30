@@ -1,5 +1,3 @@
-import java.io.IOException;
-
 public class UnmarkCommand extends Command {
     @Override
     public void execute(String input, Ui ui, TaskList tasks, Storage storage, boolean testMode) throws Exception {
