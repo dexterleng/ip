@@ -18,8 +18,8 @@ public class UnmarkCommand extends Command {
             if (index >= 0 && index < tasks.size()) {
                 tasks.get(index).markAsNotDone();
                 ui.showMessages(
-                    "OK, I've marked this task as not done yet:",
-                    "  " + tasks.get(index)
+                        "OK, I've marked this task as not done yet:",
+                        "  " + tasks.get(index)
                 );
             } else {
                 ui.showInvalidTaskNumberError();

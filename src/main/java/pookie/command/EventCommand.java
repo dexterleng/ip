@@ -1,11 +1,13 @@
 package pookie.command;
 
-import pookie.*;
-import pookie.model.Event;
-import pookie.ui.Ui;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+
+import pookie.Pookie;
+import pookie.Storage;
+import pookie.TaskList;
+import pookie.model.Event;
+import pookie.ui.Ui;
 
 public class EventCommand extends Command {
     @Override
@@ -40,9 +42,9 @@ public class EventCommand extends Command {
 
         tasks.add(new Event(false, description, from, to));
         ui.showMessages(
-            "Got it. I've added this task:" ,
-            "  " + tasks.get(tasks.size() - 1),
-            "Now you have " + tasks.size() + " tasks in the list."
+                "Got it. I've added this task:",
+                "  " + tasks.get(tasks.size() - 1),
+                "Now you have " + tasks.size() + " tasks in the list."
         );
     }
 }

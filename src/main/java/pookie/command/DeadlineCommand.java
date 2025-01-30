@@ -1,11 +1,13 @@
 package pookie.command;
 
-import pookie.*;
-import pookie.model.Deadline;
-import pookie.ui.Ui;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+
+import pookie.Pookie;
+import pookie.Storage;
+import pookie.TaskList;
+import pookie.model.Deadline;
+import pookie.ui.Ui;
 
 public class DeadlineCommand extends Command {
     @Override
@@ -27,9 +29,9 @@ public class DeadlineCommand extends Command {
         }
         tasks.add(new Deadline(false, description, deadline));
         ui.showMessages(
-            "Got it. I've added this task:",
-            "  " + tasks.get(tasks.size() - 1),
-            "Now you have " + tasks.size() + " tasks in the list."
+                "Got it. I've added this task:",
+                "  " + tasks.get(tasks.size() - 1),
+                "Now you have " + tasks.size() + " tasks in the list."
         );
     }
 }

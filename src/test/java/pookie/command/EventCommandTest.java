@@ -1,13 +1,14 @@
 package pookie.command;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import pookie.MockUi;
-import pookie.TaskList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import pookie.MockUi;
+import pookie.TaskList;
 
 public class EventCommandTest {
     private MockUi mockUi;

@@ -1,17 +1,17 @@
 package pookie;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+
 import pookie.command.Command;
 import pookie.ui.ConsoleUi;
 import pookie.ui.Ui;
 
-import java.io.*;
-import java.time.format.DateTimeFormatter;
-
 public class Pookie {
-    private static final String FILE_PATH = "./data/pookie.txt";
     public static final DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
     public static final DateTimeFormatter OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma");
-
+    private static final String FILE_PATH = "./data/pookie.txt";
     private Ui ui;
     private Storage storage;
     private TaskList tasks;
@@ -40,8 +40,8 @@ public class Pookie {
 
     public void run() throws Exception {
         ui.showMessages(
-            "Hello! I'm pookie.Pookie",
-            "What can I do for you?"
+                "Hello! I'm pookie.Pookie",
+                "What can I do for you?"
         );
 
         boolean isExit = false;

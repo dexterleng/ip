@@ -1,14 +1,20 @@
 package pookie;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+
 import pookie.model.Deadline;
 import pookie.model.Event;
 import pookie.model.Task;
 import pookie.model.Todo;
-
-import java.io.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 
 public class Storage {
     private File file;
@@ -33,37 +39,37 @@ public class Storage {
 
                 Task task = null;
                 switch (parts[0]) {
-                    case "T":
-                        if (parts.length != 3) throw new CorruptFileException();
-                        task = new Todo(isDone, description);
-                        break;
-                    case "D":
-                        if (parts.length != 4) throw new CorruptFileException();
-                        String byStr = parts[3];
-                        LocalDateTime by = null;
-                        try {
-                            by = LocalDateTime.parse(byStr, Pookie.OUTPUT_FORMATTER);
-                        } catch (DateTimeParseException e) {
-                            throw new CorruptFileException();
-                        }
-                        task = new Deadline(isDone, description, by);
-                        break;
-                    case "E":
-                        if (parts.length != 5) throw new CorruptFileException();
-                        String fromStr = parts[3];
-                        String toStr = parts[4];
-                        LocalDateTime from = null;
-                        LocalDateTime to = null;
-                        try {
-                            from = LocalDateTime.parse(fromStr, Pookie.OUTPUT_FORMATTER);
-                            to = LocalDateTime.parse(toStr, Pookie.OUTPUT_FORMATTER);
-                        } catch (DateTimeParseException e) {
-                            throw new CorruptFileException();
-                        }
-                        task = new Event(isDone, description, from, to);
-                        break;
-                    default:
+                case "T":
+                    if (parts.length != 3) throw new CorruptFileException();
+                    task = new Todo(isDone, description);
+                    break;
+                case "D":
+                    if (parts.length != 4) throw new CorruptFileException();
+                    String byStr = parts[3];
+                    LocalDateTime by = null;
+                    try {
+                        by = LocalDateTime.parse(byStr, Pookie.OUTPUT_FORMATTER);
+                    } catch (DateTimeParseException e) {
                         throw new CorruptFileException();
+                    }
+                    task = new Deadline(isDone, description, by);
+                    break;
+                case "E":
+                    if (parts.length != 5) throw new CorruptFileException();
+                    String fromStr = parts[3];
+                    String toStr = parts[4];
+                    LocalDateTime from = null;
+                    LocalDateTime to = null;
+                    try {
+                        from = LocalDateTime.parse(fromStr, Pookie.OUTPUT_FORMATTER);
+                        to = LocalDateTime.parse(toStr, Pookie.OUTPUT_FORMATTER);
+                    } catch (DateTimeParseException e) {
+                        throw new CorruptFileException();
+                    }
+                    task = new Event(isDone, description, from, to);
+                    break;
+                default:
+                    throw new CorruptFileException();
                 }
                 tasks.add(task);
             }

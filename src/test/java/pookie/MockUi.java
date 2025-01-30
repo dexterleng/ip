@@ -1,10 +1,10 @@
 package pookie;
 
-import pookie.ui.Ui;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import pookie.ui.Ui;
 
 public class MockUi implements Ui {
     private final List<String> messages = new ArrayList<>();

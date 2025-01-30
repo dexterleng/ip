@@ -1,8 +1,8 @@
 package pookie.model;
 
-import pookie.Pookie;
-
 import java.time.LocalDateTime;
+
+import pookie.Pookie;
 
 public class Deadline extends Task {
     private LocalDateTime by;

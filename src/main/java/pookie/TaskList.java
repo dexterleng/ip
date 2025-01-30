@@ -1,8 +1,8 @@
 package pookie;
 
-import pookie.model.Task;
-
 import java.util.ArrayList;
+
+import pookie.model.Task;
 
 public class TaskList {
     private ArrayList<Task> tasks;
