@@ -37,7 +37,7 @@ public class FindCommandTest {
     }
 
     @Test
-    public void testFindExactMatch() throws Exception {
+    public void testFindPartialMatch() throws Exception {
         String input = "find item";
         findCommand.execute(input, mockUi, taskList, null, true);
 
@@ -47,7 +47,7 @@ public class FindCommandTest {
     }
 
     @Test
-    public void testFindPartialMatch() throws Exception {
+    public void testFindExactMatch() throws Exception {
         String input = "find item 1";
         findCommand.execute(input, mockUi, taskList, null, true);
 
