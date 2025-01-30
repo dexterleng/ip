@@ -20,6 +20,8 @@ public class Parser {
             return new DeadlineCommand();
         } else if (input.startsWith("event")) {
             return new EventCommand();
+        } else if (input.startsWith("find")) {
+            return new FindCommand();
         } else {
             return new InvalidCommand();
         }
