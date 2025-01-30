@@ -1,3 +1,10 @@
+package pookie;
+
+import pookie.model.Deadline;
+import pookie.model.Event;
+import pookie.model.Task;
+import pookie.model.Todo;
+
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;

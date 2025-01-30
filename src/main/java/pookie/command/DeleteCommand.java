@@ -1,21 +1,27 @@
-import java.io.IOException;
+package pookie.command;
 
-public class MarkCommand extends Command {
+import pookie.Storage;
+import pookie.model.Task;
+import pookie.TaskList;
+import pookie.ui.Ui;
+
+public class DeleteCommand extends Command {
     @Override
     public void execute(String input, Ui ui, TaskList tasks, Storage storage, boolean testMode) throws Exception {
         try {
             String[] parts = input.split(" ", 2);
             if (parts.length < 2) {
-                ui.showMessage("usage: mark <task number>");
+                ui.showMessage("usage: delete <task number>");
                 return;
             }
-            int index = Integer.parseInt(parts[1].trim()) - 1;
 
+            int index = Integer.parseInt(parts[1].trim()) - 1;
             if (index >= 0 && index < tasks.size()) {
-                tasks.get(index).markAsDone();
+                Task removedTask = tasks.remove(index);
                 ui.showMessages(
-                    "Nice! I've marked this task as done:",
-                    "  " + tasks.get(index)
+                    "Noted. I've removed this task:",
+                    "  " + removedTask,
+                    "Now you have " + tasks.size() + " tasks in the list."
                 );
             } else {
                 ui.showInvalidTaskNumberError();

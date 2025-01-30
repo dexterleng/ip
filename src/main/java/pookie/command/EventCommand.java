@@ -1,4 +1,9 @@
-import java.io.IOException;
+package pookie.command;
+
+import pookie.*;
+import pookie.model.Event;
+import pookie.ui.Ui;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 

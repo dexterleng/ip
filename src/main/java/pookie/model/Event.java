@@ -1,6 +1,10 @@
+package pookie.model;
+
+import pookie.Pookie;
+
 import java.time.LocalDateTime;
 
-class Event extends Task {
+public class Event extends Task {
     private LocalDateTime from;
     private LocalDateTime to;
 

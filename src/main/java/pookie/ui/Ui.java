@@ -1,3 +1,5 @@
+package pookie.ui;
+
 public interface Ui {
     void showMessage(String message);
     void showMessages(String... messages);

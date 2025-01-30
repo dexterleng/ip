@@ -1,8 +1,11 @@
+package pookie;
+
+import pookie.command.Command;
+import pookie.ui.ConsoleUi;
+import pookie.ui.Ui;
+
 import java.io.*;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.Scanner;
 
 public class Pookie {
     private static final String FILE_PATH = "./data/pookie.txt";
@@ -37,7 +40,7 @@ public class Pookie {
 
     public void run() throws Exception {
         ui.showMessages(
-            "Hello! I'm Pookie",
+            "Hello! I'm pookie.Pookie",
             "What can I do for you?"
         );
 

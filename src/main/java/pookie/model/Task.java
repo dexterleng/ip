@@ -1,3 +1,5 @@
+package pookie.model;
+
 public abstract class Task {
     private boolean isDone;
     private String description;

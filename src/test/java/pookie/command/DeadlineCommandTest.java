@@ -1,5 +1,11 @@
+package pookie.command;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pookie.MockUi;
+import pookie.Pookie;
+import pookie.TaskList;
+import pookie.model.Deadline;
 
 import java.util.ArrayList;
 

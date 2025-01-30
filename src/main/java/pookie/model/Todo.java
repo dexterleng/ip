@@ -1,3 +1,5 @@
+package pookie.model;
+
 public class Todo extends Task {
     public Todo(Boolean isDone, String description) {
         super(isDone, description);

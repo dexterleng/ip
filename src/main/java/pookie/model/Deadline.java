@@ -1,3 +1,7 @@
+package pookie.model;
+
+import pookie.Pookie;
+
 import java.time.LocalDateTime;
 
 public class Deadline extends Task {
