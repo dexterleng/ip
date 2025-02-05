@@ -1,2 +1,0 @@
-D | 1 | a deadline | Jan 29 2001, 11:59AM
-E | 0 | an event | Jan 29 2001, 11:59AM | Jan 29 2002, 11:52AM
