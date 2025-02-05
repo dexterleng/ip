@@ -46,6 +46,13 @@ public class Pookie {
         this.testMode = testMode;
     }
 
+    public Pookie(boolean testMode) throws CorruptFileException, IOException {
+        this.ui = new ConsoleUi();
+        this.storage = new Storage(new File(FILE_PATH));
+        this.tasks = new TaskList(storage.loadTasks());
+        this.testMode = testMode;
+    }
+
     /**
      * The main entry point of the Pookie application.
      * It initializes the necessary components and starts the application.
@@ -84,5 +91,12 @@ public class Pookie {
         }
 
         ui.close();
+    }
+
+    /**
+     * Generates a response for the user's chat message.
+     */
+    public String getResponse(String input) {
+        return "Pookie heard: " + input;
     }
 }
