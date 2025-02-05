@@ -28,29 +28,29 @@ public class Pookie {
     private Ui ui;
     private Storage storage;
     private TaskList tasks;
-    private boolean testMode;
+    private boolean isTestMode;
 
     /**
      * Constructs the Pookie application with the given UI, storage, and test mode flag.
      *
      * @param ui        The user interface used for interaction.
      * @param storage   The storage system used for loading and saving tasks.
-     * @param testMode  Boolean flag indicating if the application is running in test mode.
+     * @param isTestMode  Boolean flag indicating if the application is running in test mode.
      * @throws CorruptFileException If the saved task file is corrupted.
      * @throws IOException          If an I/O error occurs during file loading.
      */
-    public Pookie(Ui ui, Storage storage, boolean testMode) throws CorruptFileException, IOException {
+    public Pookie(Ui ui, Storage storage, boolean isTestMode) throws CorruptFileException, IOException {
         this.ui = ui;
         this.storage = storage;
         this.tasks = new TaskList(storage.loadTasks());
-        this.testMode = testMode;
+        this.isTestMode = isTestMode;
     }
 
-    public Pookie(boolean testMode) throws CorruptFileException, IOException {
+    public Pookie(boolean isTestMode) throws CorruptFileException, IOException {
         this.ui = new ConsoleUi();
         this.storage = new Storage(new File(FILE_PATH));
         this.tasks = new TaskList(storage.loadTasks());
-        this.testMode = testMode;
+        this.isTestMode = isTestMode;
     }
 
     /**
@@ -61,12 +61,12 @@ public class Pookie {
      * @throws Exception If any exception occurs during the application startup or execution.
      */
     public static void main(String[] args) throws Exception {
-        boolean testMode = args.length > 0 && args[0].equals("--test");
+        boolean isTestMode = args.length > 0 && args[0].equals("--test");
 
         // Check for test mode from command-line arguments
         Ui ui = new ConsoleUi();
         Storage storage = new Storage(new File(FILE_PATH));
-        Pookie pookie = new Pookie(ui, storage, testMode);
+        Pookie pookie = new Pookie(ui, storage, isTestMode);
         pookie.run();
     }
 
@@ -86,7 +86,7 @@ public class Pookie {
         while (!isExit) {
             String input = ui.readCommand();
             Command command = Parser.parse(input);
-            command.execute(input, ui, tasks, storage, testMode);
+            command.execute(input, ui, tasks, storage, isTestMode);
             isExit = command.isExit();
         }
 

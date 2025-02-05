@@ -7,7 +7,7 @@ import pookie.ui.Ui;
 
 public class DeleteCommand extends Command {
     @Override
-    public void execute(String input, Ui ui, TaskList tasks, Storage storage, boolean testMode) throws Exception {
+    public void execute(String input, Ui ui, TaskList tasks, Storage storage, boolean isTestMode) throws Exception {
         try {
             String[] parts = input.split(" ", 2);
             if (parts.length < 2) {

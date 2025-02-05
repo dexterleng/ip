@@ -10,7 +10,7 @@ import pookie.ui.Ui;
 
 public class FindCommand extends Command {
     @Override
-    public void execute(String input, Ui ui, TaskList tasks, Storage storage, boolean testMode) {
+    public void execute(String input, Ui ui, TaskList tasks, Storage storage, boolean isTestMode) {
         String[] parts = input.split(" ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             ui.showMessage("usage: find <keyword>");

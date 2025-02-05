@@ -11,7 +11,7 @@ import pookie.ui.Ui;
 
 public class EventCommand extends Command {
     @Override
-    public void execute(String input, Ui ui, TaskList tasks, Storage storage, boolean testMode) throws Exception {
+    public void execute(String input, Ui ui, TaskList tasks, Storage storage, boolean isTestMode) throws Exception {
         String arguments = input.substring(5).trim();
 
         int fromIndex = arguments.indexOf(" /from ");
