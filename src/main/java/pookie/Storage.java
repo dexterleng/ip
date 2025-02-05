@@ -49,7 +49,9 @@ public class Storage {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(" \\| ");
-                if (parts.length < 3) throw new CorruptFileException();
+                if (parts.length < 3) {
+                    throw new CorruptFileException();
+                }
 
                 // Validate the task completion flag
                 if (!parts[1].equals("1") && !parts[1].equals("0")) {
@@ -61,11 +63,15 @@ public class Storage {
                 Task task = null;
                 switch (parts[0]) {
                 case "T":
-                    if (parts.length != 3) throw new CorruptFileException();
+                    if (parts.length != 3) {
+                        throw new CorruptFileException();
+                    }
                     task = new Todo(isDone, description);
                     break;
                 case "D":
-                    if (parts.length != 4) throw new CorruptFileException();
+                    if (parts.length != 4) {
+                        throw new CorruptFileException();
+                    }
                     String byStr = parts[3];
                     LocalDateTime by = null;
                     try {
@@ -76,7 +82,9 @@ public class Storage {
                     task = new Deadline(isDone, description, by);
                     break;
                 case "E":
-                    if (parts.length != 5) throw new CorruptFileException();
+                    if (parts.length != 5) {
+                        throw new CorruptFileException();
+                    }
                     String fromStr = parts[3];
                     String toStr = parts[4];
                     LocalDateTime from = null;
