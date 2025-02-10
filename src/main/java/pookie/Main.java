@@ -16,10 +16,6 @@ public class Main extends Application {
 
     private Pookie pookie;
 
-    public Main() throws CorruptFileException, IOException {
-        pookie = new Pookie(false);
-    }
-
     @Override
     public void start(Stage stage) {
         try {
@@ -27,10 +23,14 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
-            fxmlLoader.<MainWindow>getController().setPookie(pookie);  // inject the Duke instance
+            MainWindow window = fxmlLoader.<MainWindow>getController();
+            pookie = new Pookie(window, false);
+            window.setPookie(pookie);  // inject the Duke instance
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (CorruptFileException e) {
+            throw new RuntimeException(e);
         }
     }
 }

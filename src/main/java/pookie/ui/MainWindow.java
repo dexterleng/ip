@@ -1,5 +1,6 @@
 package pookie.ui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -12,7 +13,7 @@ import pookie.Pookie;
 /**
  * Controller for the main GUI.
  */
-public class MainWindow extends AnchorPane {
+public class MainWindow extends AnchorPane implements Ui {
     @FXML
     private ScrollPane scrollPane;
     @FXML
@@ -35,6 +36,7 @@ public class MainWindow extends AnchorPane {
     /** Injects the Duke instance */
     public void setPookie(Pookie d) {
         pookie = d;
+        pookie.sendInitialMessage();
     }
 
     /**
@@ -42,13 +44,52 @@ public class MainWindow extends AnchorPane {
      * the dialog container. Clears the user input after processing.
      */
     @FXML
-    private void handleUserInput() {
+    private void handleUserInput() throws Exception {
         String input = userInput.getText();
-        String response = pookie.getResponse(input);
         dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getPookieDialog(response, pookieImage)
+            DialogBox.getUserDialog(input, userImage)
         );
+
+        boolean isExit = pookie.respond(input);
+        if (isExit) {
+            Platform.exit();
+            return;
+        }
         userInput.clear();
+    }
+
+    @Override
+    public void showMessage(String message) {
+        dialogContainer.getChildren().addAll(
+            DialogBox.getPookieDialog(message, pookieImage)
+        );
+    }
+
+    @Override
+    public void showMessages(String... messages) {
+        String message = String.join("\n", messages);
+        dialogContainer.getChildren().addAll(
+            DialogBox.getPookieDialog(message, pookieImage)
+        );
+    }
+
+    @Override
+    public String readCommand() {
+        return "";
+    }
+
+    @Override
+    public void showInvalidTaskNumberError() {
+        showMessage("Please provide a valid task number.");
+    }
+
+    @Override
+    public void showInvalidDateError() {
+        showMessage("Please provide a valid date in the format dd/MM/yyyy HHmm e.g. 29/01/2001 1159.");
+    }
+
+    @Override
+    public void close() {
+
     }
 }

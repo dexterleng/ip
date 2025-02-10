@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
 import pookie.command.Command;
-import pookie.ui.ConsoleUi;
 import pookie.ui.Ui;
 
 /**
@@ -46,57 +45,26 @@ public class Pookie {
         this.isTestMode = isTestMode;
     }
 
-    public Pookie(boolean isTestMode) throws CorruptFileException, IOException {
-        this.ui = new ConsoleUi();
+    public Pookie(Ui ui, boolean isTestMode) throws CorruptFileException, IOException {
+        this.ui = ui;
         this.storage = new Storage(new File(FILE_PATH));
         this.tasks = new TaskList(storage.loadTasks());
         this.isTestMode = isTestMode;
     }
 
     /**
-     * The main entry point of the Pookie application.
-     * It initializes the necessary components and starts the application.
-     *
-     * @param args Command-line arguments.
-     * @throws Exception If any exception occurs during the application startup or execution.
-     */
-    public static void main(String[] args) throws Exception {
-        boolean isTestMode = args.length > 0 && args[0].equals("--test");
-
-        // Check for test mode from command-line arguments
-        Ui ui = new ConsoleUi();
-        Storage storage = new Storage(new File(FILE_PATH));
-        Pookie pookie = new Pookie(ui, storage, isTestMode);
-        pookie.run();
-    }
-
-    /**
-     * Runs the main loop of the Pookie application.
-     * The loop processes user commands until an exit command is received.
-     *
-     * @throws Exception If an error occurs during command execution.
-     */
-    public void run() throws Exception {
-        ui.showMessages(
-                "Hello! I'm pookie.Pookie",
-                "What can I do for you?"
-        );
-
-        boolean isExit = false;
-        while (!isExit) {
-            String input = ui.readCommand();
-            Command command = Parser.parse(input);
-            command.execute(input, ui, tasks, storage, isTestMode);
-            isExit = command.isExit();
-        }
-
-        ui.close();
-    }
-
-    /**
      * Generates a response for the user's chat message.
      */
-    public String getResponse(String input) {
-        return "Pookie heard: " + input;
+    public boolean respond(String input) throws Exception {
+        Command command = Parser.parse(input);
+        command.execute(input, ui, tasks, storage, isTestMode);
+        return command.isExit();
+    }
+
+    public void sendInitialMessage() {
+        ui.showMessages(
+            "Hello! I'm Pookie",
+            "What can I do for you?"
+        );
     }
 }
