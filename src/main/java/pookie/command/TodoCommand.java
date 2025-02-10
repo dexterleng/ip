@@ -9,7 +9,7 @@ public class TodoCommand extends Command {
     @Override
     public void execute(String input, Ui ui, TaskList tasks, Storage storage, boolean isTestMode) throws Exception {
         String[] parts = input.split(" ", 2);
-        if (parts.length < 2) {
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
             ui.showMessage("usage: todo <description>");
             return;
         }

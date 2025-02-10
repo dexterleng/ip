@@ -12,7 +12,12 @@ import pookie.ui.Ui;
 public class DeadlineCommand extends Command {
     @Override
     public void execute(String input, Ui ui, TaskList tasks, Storage storage, boolean isTestMode) throws Exception {
-        String arguments = input.substring(8).trim();
+        String arguments;
+        if (input.startsWith("d ") || input.equals("d")) {
+            arguments = input.substring(1).trim();
+        } else {
+            arguments = input.substring(8).trim();
+        }
         String[] parts = arguments.split(" /by ", 2);
         if (parts.length < 2) {
             ui.showMessage("usage: deadline <description> /by <deadline>");

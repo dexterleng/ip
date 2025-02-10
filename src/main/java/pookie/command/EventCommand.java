@@ -12,7 +12,12 @@ import pookie.ui.Ui;
 public class EventCommand extends Command {
     @Override
     public void execute(String input, Ui ui, TaskList tasks, Storage storage, boolean isTestMode) throws Exception {
-        String arguments = input.substring(5).trim();
+        String arguments;
+        if (input.startsWith("e ") || input.equals("e")) {
+            arguments = input.substring(1).trim();
+        } else {
+            arguments = input.substring(5).trim();
+        }
 
         int fromIndex = arguments.indexOf(" /from ");
         int toIndex = arguments.indexOf(" /to ");

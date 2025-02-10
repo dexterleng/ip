@@ -35,13 +35,13 @@ public class Parser {
             return new UnmarkCommand();
         } else if (input.startsWith("delete")) {
             return new DeleteCommand();
-        } else if (input.startsWith("todo")) {
+        } else if (input.startsWith("todo ") || input.equals("todo") || input.startsWith("t ") || input.equals("t")) {
             return new TodoCommand();
-        } else if (input.startsWith("deadline")) {
+        } else if (input.startsWith("deadline ") || input.equals("deadline") || input.startsWith("d ") || input.equals("d")) {
             return new DeadlineCommand();
-        } else if (input.startsWith("event")) {
+        } else if (input.startsWith("event ") || input.equals("event") || input.startsWith("e ") || input.equals("e")) {
             return new EventCommand();
-        } else if (input.startsWith("find")) {
+        } else if (input.startsWith("find ") || input.equals("find") || input.startsWith("f ") || input.equals("f")) {
             return new FindCommand();
         } else {
             return new InvalidCommand();
