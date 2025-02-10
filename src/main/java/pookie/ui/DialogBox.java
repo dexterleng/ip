@@ -1,4 +1,4 @@
-package pookie;
+package pookie.ui;
 
 import java.io.IOException;
 import java.util.Collections;
