@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import pookie.ui.MainWindow;
 
 /**
@@ -27,10 +28,22 @@ public class Main extends Application {
             pookie = new Pookie(window, false);
             window.setPookie(pookie);  // inject the Duke instance
             stage.show();
+
+            stage.setOnCloseRequest(event -> {
+                try {
+                    handleAppQuit(event);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         } catch (CorruptFileException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void handleAppQuit(WindowEvent event) throws Exception {
+        pookie.bye();
     }
 }

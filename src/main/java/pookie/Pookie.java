@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
+import pookie.command.ByeCommand;
 import pookie.command.Command;
 import pookie.ui.Ui;
 
@@ -66,5 +67,10 @@ public class Pookie {
             "Hello! I'm Pookie",
             "What can I do for you?"
         );
+    }
+
+    public void bye() throws Exception {
+        ByeCommand command = new ByeCommand();
+        command.execute("", ui, tasks, storage, isTestMode);
     }
 }
