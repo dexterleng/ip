@@ -14,10 +14,10 @@ import pookie.ui.MainWindow;
  */
 public class Main extends Application {
 
-    private Pookie duke;
+    private Pookie pookie;
 
     public Main() throws CorruptFileException, IOException {
-        duke = new Pookie(false);
+        pookie = new Pookie(false);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
-            fxmlLoader.<MainWindow>getController().setDuke(duke);  // inject the Duke instance
+            fxmlLoader.<MainWindow>getController().setPookie(pookie);  // inject the Duke instance
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
